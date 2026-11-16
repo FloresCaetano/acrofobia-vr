@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consola del terapeuta · Acrofobia VR</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="/vendor/chart.js/chart.umd.min.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">▲</span>
+      <div>
+        <h1>Acrofobia VR</h1>
+        <p class="subtitle">Consola del terapeuta</p>
+      </div>
+    </div>
+    <div class="status" role="status" aria-live="polite">
+      <span class="badge" id="server-status" data-state="off"><span class="dot"></span><span class="label">Servidor: conectando…</span></span>
+      <span class="badge" id="vr-status" data-state="off"><span class="dot"></span><span class="label">VR desconectada</span></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Pantalla de inicio -->
+    <section id="start-view" class="view" aria-labelledby="start-title">
+      <div class="card narrow">
+        <h2 id="start-title">Nueva sesión</h2>
+        <form id="start-form">
+          <label for="alias">Alias del paciente</label>
+          <input id="alias" name="alias" maxlength="40" autocomplete="off" required placeholder="Ej.: Paciente A">
+          <p class="hint">Usa solo un alias. Nunca escribas el nombre real del paciente.</p>
+          <button type="submit" class="btn primary large">Iniciar sesión</button>
+        </form>
+      </div>
+      <div class="card narrow">
+        <h2>Sesiones anteriores</h2>
+        <ul id="session-list" class="session-list"><li class="muted">Cargando…</li></ul>
+      </div>
+      <p class="disclaimer">Prototipo académico. No es una herramienta clínica validada.</p>
+    </section>
+
+    <!-- Sesión en curso -->
+    <section id="session-view" class="view" hidden aria-labelledby="session-title">
+      <div class="session-header">
+        <div>
+          <h2 id="session-title">Sesión con <span id="session-alias"></span></h2>
+          <p class="muted">Inicio: <span id="session-start"></span> · Duración: <span id="session-clock">00:00</span></p>
+        </div>
+        <button id="calm-button" class="btn calm xl" type="button">Botón de calma</button>
+      </div>
+
+      <div class="layout">
+        <div class="column controls">
+          <section class="card" aria-labelledby="level-title">
+            <h3 id="level-title">Nivel</h3>
+            <p class="muted">Escena actual: <strong id="current-scene">—</strong></p>
+            <div id="level-buttons" class="level-grid"></div>
+          </section>
+
+          <section class="card" aria-labelledby="stimuli-title">
+            <h3 id="stimuli-title">Estímulos</h3>
+            <div id="stimuli" class="stimuli"></div>
+            <p class="hint">Los cambios se aplican en la VR con una transición suave de 2 segundos.</p>
+          </section>
+
+          <section class="card" aria-labelledby="suds-title">
+            <h3 id="suds-title">Escala SUDS</h3>
+            <button id="suds-request" class="btn primary" type="button">Pedir SUDS ahora</button>
+            <label for="suds-interval">Preguntar automáticamente cada</label>
+            <div class="inline">
+              <select id="suds-interval">
+                <option value="30">30 segundos (demo)</option>
+                <option value="60">1 minuto</option>
+                <option value="120">2 minutos</option>
+                <option value="180">3 minutos</option>
+                <option value="300">5 minutos</option>
+              </select>
+              <button id="suds-interval-apply" class="btn" type="button">Aplicar</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="column monitor">
+          <section class="card" aria-labelledby="chart-title">
+            <div class="card-title-row">
+              <h3 id="chart-title">Ansiedad (SUDS) en el tiempo</h3>
+              <span class="muted">Último: <strong id="last-suds">—</strong></span>
+            </div>
+            <div class="chart-box"><canvas id="suds-chart" aria-label="Gráfica de SUDS en el tiempo, con el nivel de fondo" role="img"></canvas></div>
+            <div id="level-legend" class="legend"></div>
+          </section>
+
+          <section id="suggestion" class="card suggestion" hidden aria-live="polite">
+            <p class="suggestion-kicker">Sugerencia automática</p>
+            <p id="suggestion-text" class="suggestion-text"></p>
+            <p class="hint">La decisión es siempre del terapeuta.</p>
+          </section>
+
+          <section class="card" aria-labelledby="log-title">
+            <h3 id="log-title">Registro de eventos</h3>
+            <ol id="event-log" class="event-log" aria-live="polite"></ol>
+          </section>
+
+          <button id="end-button" class="btn danger" type="button">Terminar sesión</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resumen -->
+    <section id="summary-view" class="view" hidden aria-labelledby="summary-title">
+      <div class="card narrow">
+        <h2 id="summary-title">Resumen de la sesión</h2>
+        <dl id="summary-stats" class="stats"></dl>
+        <div id="summary-levels"></div>
+        <div class="actions">
+          <a id="export-link" class="btn primary large" href="#" download>Exportar CSV</a>
+          <button id="new-session" class="btn" type="button">Nueva sesión</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -12,7 +12,7 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "fake-vr": "node ../tools/fake-vr.js",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.test.js\""
   },
   "dependencies": {
     "better-sqlite3": "^13.2.0",

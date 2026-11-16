@@ -25,7 +25,8 @@ export class Hub {
     this.consoles = new Set();
 
     wss.on('connection', (socket, request) => this.accept(socket, request));
-    this.heartbeat = setInterval(() => this.checkHeartbeats(wss), HEARTBEAT_MS);
+    // unref: the heartbeat alone must never keep the process alive.
+    this.heartbeat = setInterval(() => this.checkHeartbeats(wss), HEARTBEAT_MS).unref();
     wss.on('close', () => clearInterval(this.heartbeat));
   }
 

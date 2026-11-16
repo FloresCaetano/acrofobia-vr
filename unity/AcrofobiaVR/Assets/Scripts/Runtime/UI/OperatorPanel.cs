@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Acrofobia.Controls;
 using Acrofobia.Core;
+using Acrofobia.Network;
 using Acrofobia.Player;
 using Acrofobia.Stimuli;
 using Acrofobia.Suds;
@@ -22,6 +23,7 @@ namespace Acrofobia.UI
         [SerializeField] private ModalFocus focus;
         [SerializeField] private PlayerRig playerRig;
         [SerializeField] private SudsManager suds;
+        [SerializeField] private ConsoleLink consoleLink;
 
         private readonly Dictionary<StimulusId, Slider> sliders = new();
         private readonly Dictionary<StimulusId, TextMeshProUGUI> values = new();
@@ -118,8 +120,18 @@ namespace Acrofobia.UI
                 image.color = active ? Theme.accent : Theme.surfaceRaised;
                 label.color = active ? Theme.textOnAccent : Theme.textPrimary;
             }
+            connectionLabel.text = ConnectionText();
             sudsLabel.text = $"Escala SUDS · cada {suds.IntervalSeconds:0} s durante la exposición";
             swayLabel.text = $"Balanceo de cámara: {(playerRig.CameraSwayEnabled ? "activado" : "desactivado")}";
+        }
+
+        private string ConnectionText()
+        {
+            string address = consoleLink.ServerAddress;
+            if (!consoleLink.IsConnected) return $"Servidor: sin conexión · reintentando ({address})";
+            string session = string.IsNullOrEmpty(consoleLink.SessionAlias) ? "sin sesión activa" : $"sesión con {consoleLink.SessionAlias}";
+            string pending = consoleLink.PendingSuds > 0 ? $" · {consoleLink.PendingSuds} SUDS por confirmar" : "";
+            return $"Servidor: conectado ({address}) · {session}{pending}";
         }
 
         private void Toggle()

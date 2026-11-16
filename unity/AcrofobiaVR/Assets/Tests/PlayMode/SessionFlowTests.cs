@@ -41,6 +41,8 @@ namespace Acrofobia.Tests
             var app = Object.FindAnyObjectByType<AppRoot>();
             if (app != null) Object.Destroy(app.gameObject);
             yield return null;
+            // Answers given by the tests must not be delivered to a real server later.
+            System.IO.File.Delete(System.IO.Path.Combine(Application.persistentDataPath, "suds_outbox.json"));
         }
 
         [UnityTest]

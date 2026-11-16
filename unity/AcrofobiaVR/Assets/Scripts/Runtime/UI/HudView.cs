@@ -1,5 +1,6 @@
 using Acrofobia.Core;
 using Acrofobia.Data;
+using Acrofobia.Network;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace Acrofobia.UI
         private const float HintSeconds = 10f;
 
         [SerializeField] private SessionManager session;
+        [SerializeField] private ConsoleLink consoleLink;
 
         private TextMeshProUGUI levelLabel;
         private TextMeshProUGUI hintLabel;
@@ -22,6 +24,7 @@ namespace Acrofobia.UI
         private Image connectionDot;
         private TextMeshProUGUI connectionLabel;
         private float hintTimer;
+        private bool wasConnected;
 
         protected override void Build(RectTransform root)
         {
@@ -69,6 +72,13 @@ namespace Acrofobia.UI
 
         private void Update()
         {
+            bool connected = consoleLink.IsConnected;
+            if (connected != wasConnected || connectionLabel.text.Length == 0)
+            {
+                wasConnected = connected;
+                SetConnection(connected, connected ? "Conectado" : "Sin servidor");
+            }
+
             if (hintTimer <= 0f) return;
             hintTimer -= Time.unscaledDeltaTime;
             float fadeIn = Mathf.Clamp01((HintSeconds - hintTimer) / 0.6f);
@@ -76,14 +86,14 @@ namespace Acrofobia.UI
             hintGroup.alpha = Mathf.Min(fadeIn, fadeOut);
         }
 
-        public void SetConnection(bool connected, string text)
+        private void SetConnection(bool connected, string text)
         {
             connectionDot.color = connected ? Theme.accent : Theme.textSecondary;
             connectionLabel.text = text;
             connectionLabel.color = connected ? Theme.textPrimary : Theme.textSecondary;
         }
 
-        public void ShowHint(string text)
+        private void ShowHint(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return;
             hintLabel.text = text;
