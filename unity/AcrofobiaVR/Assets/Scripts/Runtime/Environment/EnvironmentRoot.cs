@@ -1,3 +1,4 @@
+using Acrofobia.Data;
 using Acrofobia.Player;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace Acrofobia.Environment
 
         /// <summary>Default place for the player when the environment is entered without a specific level.</summary>
         public abstract float DefaultSpawnDistance { get; }
+
+        /// <summary>Configures level-specific scenery. Called while the screen is faded out; null means "no level".</summary>
+        public virtual void ApplyLevel(LevelDefinition level) { }
 
         public static EnvironmentRoot FindIn(UnityEngine.SceneManagement.Scene scene)
         {

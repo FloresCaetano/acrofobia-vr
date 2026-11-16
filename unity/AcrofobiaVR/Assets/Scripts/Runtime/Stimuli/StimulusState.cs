@@ -11,7 +11,7 @@ namespace Acrofobia.Stimuli
     {
         [SerializeField] private StimulusSettings settings;
 
-        [Tooltip("Values used when an environment scene runs without the Boot scene (for example, in edit mode).")]
+        [Tooltip("Values used when an environment runs without the Boot scene (edit mode, screenshots).")]
         [SerializeField] private StimulusValues editorPreview = new(60f, 30f, 30f, 15f, 70f);
 
         public StimulusSettings Settings => settings;
@@ -22,26 +22,17 @@ namespace Acrofobia.Stimuli
         /// <summary>Values the interpolation is heading to.</summary>
         public StimulusValues Target { get; private set; }
 
-        public bool IsDriven { get; private set; }
-
-        private void OnEnable()
-        {
-            // Assets keep runtime state between play sessions in the editor; start clean every time.
-            IsDriven = false;
-            Current = editorPreview;
-            Target = editorPreview;
-        }
+        private void OnEnable() => Release();
 
         public void Publish(StimulusValues current, StimulusValues target)
         {
-            IsDriven = true;
             Current = current;
             Target = target;
         }
 
+        /// <summary>Returns to the preview values. Assets keep runtime state between play sessions in the editor.</summary>
         public void Release()
         {
-            IsDriven = false;
             Current = editorPreview;
             Target = editorPreview;
         }

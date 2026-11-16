@@ -6,13 +6,16 @@
     ./tools/unity-batch.ps1                       # Reconstruye escenas y assets
     ./tools/unity-batch.ps1 -Method Acrofobia.Editor.Build.PlayerBuilder.BuildWindows
     ./tools/unity-batch.ps1 -Tests                # Ejecuta las pruebas EditMode
+    ./tools/unity-batch.ps1 -Tests -Platform PlayMode
 
 .NOTES
     El editor de Unity debe estar cerrado: el modo batch no puede abrir un proyecto en uso.
 #>
 param(
     [string]$Method = "Acrofobia.Editor.Build.ProjectBuilder.BuildBatch",
-    [switch]$Tests
+    [switch]$Tests,
+    [ValidateSet("EditMode", "PlayMode")]
+    [string]$Platform = "EditMode"
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,9 +37,9 @@ if (Test-Path (Join-Path $projectPath "Temp/UnityLockfile")) {
 }
 
 if ($Tests) {
-    $results = Join-Path $repoRoot "builds/test-results.xml"
+    $results = Join-Path $repoRoot "builds/test-results-$Platform.xml"
     New-Item -ItemType Directory -Force (Split-Path $results) | Out-Null
-    & $unity -batchmode -projectPath $projectPath -runTests -testPlatform EditMode -testResults $results -logFile - | Out-Host
+    & $unity -batchmode -projectPath $projectPath -runTests -testPlatform $Platform -testResults $results -logFile - | Out-Host
 } else {
     & $unity -batchmode -projectPath $projectPath -executeMethod $Method -quit -logFile - | Out-Host
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Acrofobia.Controls;
 using UnityEngine;
 
@@ -28,8 +29,10 @@ namespace Acrofobia.Player
         private float yaw;
         private float pitch;
 
-        public bool MovementEnabled { get; set; } = true;
-        public bool LookEnabled { get; set; } = true;
+        private readonly HashSet<object> blockers = new();
+
+        /// <summary>False while any system (a modal panel, a scene transition) holds a block on the controls.</summary>
+        public bool ControlsEnabled => blockers.Count == 0;
         public float Distance => distance;
         public Transform CameraPivot => cameraPivot;
 
@@ -58,6 +61,11 @@ namespace Acrofobia.Player
 
         public void Unbind() => path = null;
 
+        /// <summary>Disables look and movement until the same owner calls <see cref="Unblock"/>.</summary>
+        public void Block(object owner) => blockers.Add(owner);
+
+        public void Unblock(object owner) => blockers.Remove(owner);
+
         public void SetAllowedRange(float rangeMin, float rangeMax)
         {
             float pathMin = path?.MinDistance ?? float.MinValue;
@@ -70,14 +78,14 @@ namespace Acrofobia.Player
         {
             if (path == null || input == null) return;
 
-            if (LookEnabled && !input.DrivesHeadPose)
+            if (ControlsEnabled && !input.DrivesHeadPose)
             {
                 Vector2 look = input.LookDelta;
                 yaw += look.x;
                 pitch = Mathf.Clamp(pitch - look.y, minPitch, maxPitch);
             }
 
-            float targetSpeed = MovementEnabled ? input.Move * walkSpeed : 0f;
+            float targetSpeed = ControlsEnabled ? input.Move * walkSpeed : 0f;
             speed = Mathf.MoveTowards(speed, targetSpeed, acceleration * Time.deltaTime);
             distance += speed * Time.deltaTime;
 

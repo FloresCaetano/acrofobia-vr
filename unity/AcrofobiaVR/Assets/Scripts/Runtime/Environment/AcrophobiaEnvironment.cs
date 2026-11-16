@@ -1,3 +1,4 @@
+using Acrofobia.Data;
 using Acrofobia.Environment.Audio;
 using Acrofobia.Environment.Bridge;
 using Acrofobia.Environment.Canyon;
@@ -34,8 +35,11 @@ namespace Acrofobia.Environment
 
         private void Update() => ApplyStimuli();
 
-        /// <summary>Opens a gap in the deck (Rothbaum, 1995) at the given distance, or closes it with null.</summary>
-        public void SetMissingPlank(float? distance) => bridge.SetMissingPlank(distance);
+        /// <summary>Opens the level's gap in the deck (a nod to Rothbaum et al., 1995) or closes it.</summary>
+        public override void ApplyLevel(LevelDefinition level)
+        {
+            bridge.SetMissingPlank(level != null && level.missingPlank ? level.missingPlankDistance : null);
+        }
 
 #if UNITY_EDITOR
         /// <summary>Builds the procedural parts and applies the preview stimuli without entering play mode (screenshots, scene view).</summary>

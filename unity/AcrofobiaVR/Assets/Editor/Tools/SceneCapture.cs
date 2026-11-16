@@ -3,6 +3,7 @@ using System.IO;
 using Acrofobia.Core;
 using Acrofobia.Editor.Build;
 using Acrofobia.Environment;
+using Acrofobia.Environment.Meadow;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -31,6 +32,7 @@ namespace Acrofobia.Editor.Tools
             {
                 Directory.CreateDirectory(OutputFolder);
                 CaptureCanyon();
+                CaptureMeadow();
                 Debug.Log($"[SceneCapture] Screenshots written to {OutputFolder}");
             }
             finally
@@ -78,11 +80,26 @@ namespace Acrofobia.Editor.Tools
 
             Shot("canyon_shore", FromPath(path.Evaluate(-3f), 0f, -3f));
             Shot("canyon_center", FromPath(path.Evaluate(center - 0.5f), 35f, 8f));
-            Shot("canyon_look_down", FromPath(path.Evaluate(center - 0.5f), 10f, 62f));
+            // Level 4: the missing plank right in front of the feet.
+            environment.Bridge.SetMissingPlank(center);
+            Shot("canyon_look_down", FromPath(path.Evaluate(center - 0.7f), 10f, 62f));
+            environment.Bridge.SetMissingPlank(null);
             // Hovering inside the gorge, beside the bridge.
             float deck = environment.Bridge.transform.position.y;
             Vector3 overview = new(-75f, deck - 12f, -14f);
             Shot("canyon_overview", new Pose(overview, Quaternion.LookRotation(new Vector3(0f, deck - 8f, 4f) - overview)));
+        }
+
+        private static void CaptureMeadow()
+        {
+            EditorSceneManager.OpenScene(ProjectBuilder.ScenePath(SceneNames.Neutral), OpenSceneMode.Single);
+            var environment = UnityEngine.Object.FindAnyObjectByType<NeutralEnvironment>();
+            var path = environment.WalkPath;
+
+            Shot("meadow_spawn", FromPath(path.Evaluate(environment.DefaultSpawnDistance), 0f, 2f));
+            Shot("meadow_pond", FromPath(path.Evaluate(path.MaxDistance), 25f, 12f));
+            Vector3 aerial = path.Evaluate(0f).position + new Vector3(-30f, 22f, -18f);
+            Shot("meadow_overview", new Pose(aerial, Quaternion.LookRotation(path.Evaluate(path.MaxDistance).position + new Vector3(8f, 0f, 14f) - aerial)));
         }
 
         private static Pose FromPath(Pose surface, float yaw, float pitch)
