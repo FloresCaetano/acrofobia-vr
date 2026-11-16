@@ -4,6 +4,8 @@ Prototipo académico de la ESPE (*Desarrollo de Software Global Aplicado a la In
 
 > **Prototipo académico. No es una herramienta clínica validada.**
 
+**¿Solo quieres probarlo?** Mira [Cómo iniciar la aplicación](#cómo-iniciar-la-aplicación).
+
 ![Puente colgante sobre el cañón](docs/screenshots/canyon_center.jpg)
 
 | Prado (lugar seguro) | Mirar abajo (nivel 4) |
@@ -22,52 +24,108 @@ Prototipo académico de la ESPE (*Desarrollo de Software Global Aplicado a la In
 
 Todo lo de Unity (escenas, terreno, puente, materiales, UI y configuración) **se genera por código**: no hay pasos manuales en el editor.
 
-## Requisitos
+## Cómo iniciar la aplicación
 
-- **Unity 6000.6.0f1** (Unity Hub) con *Windows Build Support*
-- **Node.js 20 o superior** (probado con 24.16). Para `npm run fake-vr` se necesita Node 22+.
-- Windows 10/11 (probado en Windows 11)
+Hay dos partes que se inician por separado: el **servidor con la consola del terapeuta** y la **app del paciente**. El orden no importa: si la app abre primero, se conecta sola cuando el servidor arranca.
 
-## Instalación
+### Requisitos
+
+| Para… | Necesitas |
+|---|---|
+| La app del paciente (opción rápida) | Windows 10/11 de 64 bits. **No hace falta Unity.** |
+| El servidor y la consola | [Node.js](https://nodejs.org/) 20 o superior (recomendado: la versión LTS más reciente) y Git |
+| Abrir o modificar el proyecto de Unity | Unity Hub con **Unity 6000.6.0f1** y *Windows Build Support* |
+
+### Paso 1. Descargar el proyecto
+
+```bash
+git clone https://github.com/FloresCaetano/acrofobia-vr.git
+cd acrofobia-vr
+```
+
+### Paso 2. Iniciar el servidor y la consola del terapeuta
 
 ```bash
 cd server
 npm install
-```
-
-El proyecto de Unity se abre desde Unity Hub con **Add → Add project from disk → `unity/AcrofobiaVR`**. Las escenas ya están generadas. Para regenerarlas, usa el menú **Acrofobia > Construir escenas** o, con el editor **cerrado**:
-
-```powershell
-./tools/unity-batch.ps1
-```
-
-## Ejecutar
-
-### 1. Servidor y consola
-
-```bash
-cd server
 npm start
 ```
 
-Abre **http://localhost:8080**. En la terminal aparecen también las direcciones para conectarse desde otra PC de la red.
+- `npm install` solo hace falta la primera vez.
+- En la terminal debe aparecer `Acrofobia VR · servidor listo en el puerto 8080`.
+- Abre **http://localhost:8080** en el navegador: esa es la consola del terapeuta.
+- La terminal también muestra la dirección para entrar desde otra PC de la misma red (por ejemplo, `http://192.168.1.20:8080`).
+- Para detener el servidor, pulsa `Ctrl + C`. Las sesiones quedan guardadas en `server/data/acrofobia.db`.
 
-### 2. App de Unity
+### Paso 3. Iniciar la app del paciente
 
-- **En el editor:** abre `Assets/Scenes/Boot.unity` y pulsa Play.
-- **Build de Windows:** `./tools/unity-batch.ps1 -Method Acrofobia.Editor.Build.PlayerBuilder.BuildWindowsBatch` genera `builds/Windows/AcrofobiaVR.exe` (o usa el menú **Acrofobia > Build de Windows**).
-- **Servidor en otra PC:** `AcrofobiaVR.exe -server ws://192.168.1.20:8080`.
+**Opción A: ejecutable listo (recomendada para la demo)**
 
-La app funciona **igual sin servidor**: el panel **F1** controla todo localmente. Cuando el servidor vuelve, se reconecta sola y envía las respuestas SUDS que quedaron pendientes.
+1. Descarga **`AcrofobiaVR-Windows.zip`** desde la sección [Releases](https://github.com/FloresCaetano/acrofobia-vr/releases/latest) del repositorio.
+2. Descomprímelo en cualquier carpeta y ejecuta **`AcrofobiaVR.exe`**.
+3. Si Windows SmartScreen muestra un aviso, elige **Más información → Ejecutar de todas formas**: el ejecutable no está firmado.
 
-### 3. Probar la consola sin Unity
+**Opción B: desde el editor de Unity**
+
+1. En Unity Hub: **Add → Add project from disk** y elige la carpeta `unity/AcrofobiaVR`.
+2. Abre la escena `Assets/Scenes/Boot.unity` y pulsa **Play**.
+   (También puedes dar Play en `Neutral` o `Acrophobia`: la app carga primero `Boot` sola.)
+
+**Opción C: generar tu propio ejecutable**, con el editor de Unity cerrado:
+
+```powershell
+./tools/unity-batch.ps1 -Method Acrofobia.Editor.Build.PlayerBuilder.BuildWindowsBatch
+```
+
+El resultado queda en `builds/Windows/AcrofobiaVR.exe`. Desde el editor, es el menú **Acrofobia > Build de Windows**.
+
+### Paso 4. Comprobar que todo está conectado
+
+1. En la consola, la insignia de arriba a la derecha debe decir **"VR conectada"**. En la app, la esquina superior derecha dice **"Conectado"**.
+2. Escribe un alias para el paciente (nunca el nombre real) y pulsa **Iniciar sesión**.
+3. Pulsa **Nivel 1**: la app pasa del prado al cañón con un fundido.
+
+### Si el servidor está en otra computadora
+
+Inicia la app indicando la dirección del servidor:
+
+```powershell
+AcrofobiaVR.exe -server ws://192.168.1.20:8080
+```
+
+En la PC del servidor, permite a Node.js en el Firewall de Windows (redes privadas) la primera vez que lo pida.
+
+### Sin servidor
+
+La app funciona igual sin servidor. Pulsa **F1** para abrir el panel del operador, donde puedes cambiar de nivel (teclas 1–4), mover los estímulos y pedir la escala SUDS. Cuando el servidor vuelve, la app se reconecta sola y envía las respuestas SUDS que quedaron pendientes.
+
+### Probar la consola sin abrir Unity
+
+Con el servidor ya iniciado, en otra terminal:
 
 ```bash
 cd server
 npm run fake-vr
 ```
 
-`tools/fake-vr.js` simula la app: acepta todos los comandos y responde SUDS que bajan con el tiempo, como en una habituación real.
+`tools/fake-vr.js` simula la app: acepta todos los comandos y responde SUDS que bajan con el tiempo. Necesita Node.js 22 o superior.
+
+### Problemas comunes
+
+| Síntoma | Solución |
+|---|---|
+| `EADDRINUSE` al ejecutar `npm start` | El puerto 8080 está ocupado. Copia `server/.env.example` como `server/.env` y cambia `PORT`. Luego inicia la app con `-server ws://localhost:NUEVO_PUERTO`. |
+| La consola dice "VR desconectada" | Revisa que la app esté abierta y que la dirección de `-server` sea correcta. Si hay dos copias de la app abiertas, solo una puede estar conectada a la vez. |
+| `npm install` falla al compilar `better-sqlite3` | Usa una versión LTS de Node.js (20, 22 o 24): para esas versiones hay binarios ya compilados. |
+| La consola no carga la gráfica | Ejecuta `npm install` dentro de `server`: Chart.js se sirve desde `node_modules`. |
+
+### Regenerar las escenas de Unity (solo si modificas el builder)
+
+Todas las escenas, materiales y configuraciones se generan por código. Usa el menú **Acrofobia > Construir escenas** o, con el editor cerrado:
+
+```powershell
+./tools/unity-batch.ps1
+```
 
 ## Controles (paciente)
 
