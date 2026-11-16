@@ -43,3 +43,6 @@ tools/blender/__pycache__/
 *.blend1
 .DS_Store
 Thumbs.db
+
+# Escenas temporales que deja el test runner de Unity si se interrumpe
+unity/**/Assets/InitTestScene*.unity*
