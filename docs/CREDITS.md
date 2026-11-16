@@ -1,6 +1,6 @@
 # Créditos y licencias de recursos externos
 
-Todos los recursos externos son **CC0 (dominio público)**: se pueden usar, modificar y redistribuir sin atribución obligatoria. Igual los registramos aquí por transparencia.
+Las texturas y los HDRI son **CC0 (dominio público)**: se pueden usar, modificar y redistribuir sin atribución obligatoria. La fuente usa la licencia **SIL Open Font License 1.1**, que permite incluirla en el proyecto si se acompaña de su licencia. Igual registramos todo aquí por transparencia.
 
 | Recurso | Uso en el proyecto | Fuente | Licencia |
 |---|---|---|---|
@@ -11,6 +11,9 @@ Todos los recursos externos son **CC0 (dominio público)**: se pueden usar, modi
 | `leafy_grass` (difuso + normal, 2k) | Suelo del prado | [Poly Haven](https://polyhaven.com/a/leafy_grass) | CC0 |
 | `dry_riverbed_rock` (difuso + normal, 2k) | Fondo del cañón (lecho del río) | [Poly Haven](https://polyhaven.com/a/dry_riverbed_rock) | CC0 |
 | `rough_wood` (difuso + normal, 1k) | Tablas y postes del puente | [Poly Haven](https://polyhaven.com/a/rough_wood) | CC0 |
+| **Atkinson Hyperlegible** (Regular y Bold) | Toda la UI de Unity y de la consola web | [Braille Institute](https://www.brailleinstitute.org/freefont/) vía [Google Fonts](https://github.com/google/fonts/tree/main/ofl/atkinsonhyperlegible) | OFL 1.1 (`OFL.txt` junto a cada copia) |
+| Chart.js 4 | Gráfica de la consola | [chartjs.org](https://www.chartjs.org/) (npm) | MIT |
+| TextMesh Pro Essential Resources | Shaders y ajustes de TMP | Paquete `com.unity.ugui` de Unity | Unity Companion License |
 
 ## Recursos generados por código
 

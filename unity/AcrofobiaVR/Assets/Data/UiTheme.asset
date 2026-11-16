@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Acrofobia.Runtime::Acrofobia.UI.UiTheme
   regularFont: {fileID: 11400000, guid: ab3847d56706c894397a83302d83ab05, type: 2}
   boldFont: {fileID: 11400000, guid: bc019fecd1342b74095c4e80edbf464a, type: 2}
-  background: {r: 0.059, g: 0.106, b: 0.176, a: 0.94}
+  background: {r: 0.059, g: 0.106, b: 0.176, a: 0.97}
   surface: {r: 0.086, g: 0.149, b: 0.239, a: 1}
   surfaceRaised: {r: 0.137, g: 0.212, b: 0.318, a: 1}
   textPrimary: {r: 0.957, g: 0.969, b: 0.98, a: 1}

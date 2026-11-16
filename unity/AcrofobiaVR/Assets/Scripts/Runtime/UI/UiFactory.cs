@@ -27,7 +27,7 @@ namespace Acrofobia.UI
         public UiTheme Theme { get; }
 
         public static Sprite Rounded => roundedSprite ??= CreateRoundedSprite(64, 18);
-        public static Sprite Circle => circleSprite ??= CreateRoundedSprite(64, 32);
+        public static Sprite CircleSprite => circleSprite ??= CreateRoundedSprite(128, 64);
 
         public static RectTransform Rect(string name, Transform parent)
         {
@@ -64,6 +64,16 @@ namespace Acrofobia.UI
                 image.type = Image.Type.Sliced;
             }
             image.color = color;
+            return image;
+        }
+
+        /// <summary>A true circle: the sprite is drawn unsliced so it never turns into a rounded square when scaled.</summary>
+        public Image Circle(string name, Transform parent, Color color)
+        {
+            var image = Panel(name, parent, color);
+            image.sprite = CircleSprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = true;
             return image;
         }
 
@@ -174,8 +184,7 @@ namespace Acrofobia.UI
             Stretch(handleArea);
             handleArea.offsetMin = new Vector2(height * 0.5f, 0f);
             handleArea.offsetMax = new Vector2(-height * 0.5f, 0f);
-            var handle = Panel("Handle", handleArea, Theme.textPrimary);
-            handle.sprite = Circle;
+            var handle = Circle("Handle", handleArea, Theme.textPrimary);
             handle.rectTransform.sizeDelta = new Vector2(height, 0f);
 
             slider.fillRect = fill.rectTransform;

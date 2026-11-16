@@ -55,7 +55,9 @@ namespace Acrofobia.UI
             UiFactory.Horizontal(row.gameObject, 36f, TextAnchor.MiddleCenter);
             UiFactory.Size(row, preferredHeight: 190f);
 
-            face = UiFactory.Rect("Face", row).gameObject.AddComponent<FaceGraphic>();
+            var faceObject = UiFactory.Rect("Face", row).gameObject;
+            faceObject.AddComponent<CanvasRenderer>(); // custom Graphics do not get one automatically
+            face = faceObject.AddComponent<FaceGraphic>();
             face.raycastTarget = false;
             UiFactory.Size(face, 180f, 180f);
 

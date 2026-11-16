@@ -14,7 +14,7 @@ namespace Acrofobia.UI
         public TMP_FontAsset boldFont;
 
         [Header("Surfaces")]
-        public Color background = new(0.059f, 0.106f, 0.176f, 0.94f);
+        public Color background = new(0.059f, 0.106f, 0.176f, 0.97f);
         public Color surface = new(0.086f, 0.149f, 0.239f, 1f);
         public Color surfaceRaised = new(0.137f, 0.212f, 0.318f, 1f);
 

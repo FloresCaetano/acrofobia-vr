@@ -48,11 +48,9 @@ namespace Acrofobia.UI
 
             var holder = UiFactory.Rect("Breathing", card.transform);
             UiFactory.Size(holder, preferredHeight: 230f);
-            var ring = Factory.Panel("Ring", holder, new Color(Theme.calm.r, Theme.calm.g, Theme.calm.b, 0.25f));
-            ring.sprite = UiFactory.Circle;
+            var ring = Factory.Circle("Ring", holder, new Color(Theme.calm.r, Theme.calm.g, Theme.calm.b, 0.25f));
             UiFactory.Anchor(ring.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(220f, 220f), Vector2.zero);
-            var dot = Factory.Panel("Circle", holder, Theme.calm);
-            dot.sprite = UiFactory.Circle;
+            var dot = Factory.Circle("Circle", holder, Theme.calm);
             circle = dot.rectTransform;
             UiFactory.Anchor(circle, new Vector2(0.5f, 0.5f), new Vector2(120f, 120f), Vector2.zero);
             breathLabel = Factory.Label(holder, "", Theme.bodySize, Theme.textOnAccent, true, TextAlignmentOptions.Center);

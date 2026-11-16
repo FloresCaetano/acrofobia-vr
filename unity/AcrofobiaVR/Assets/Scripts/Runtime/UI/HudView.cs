@@ -36,8 +36,7 @@ namespace Acrofobia.UI
 
             var connection = Factory.Panel("Connection", root, Theme.background);
             UiFactory.Anchor(connection.rectTransform, new Vector2(1f, 1f), new Vector2(300f, 56f), new Vector2(-32f, -32f));
-            connectionDot = Factory.Panel("Dot", connection.transform, Theme.textSecondary);
-            connectionDot.sprite = UiFactory.Circle;
+            connectionDot = Factory.Circle("Dot", connection.transform, Theme.textSecondary);
             UiFactory.Anchor(connectionDot.rectTransform, new Vector2(0f, 0.5f), new Vector2(18f, 18f), new Vector2(20f, 0f));
             connectionLabel = Factory.Label(connection.transform, "Sin servidor", Theme.smallSize, Theme.textSecondary);
             UiFactory.Stretch(connectionLabel.rectTransform);
